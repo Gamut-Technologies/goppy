@@ -10,7 +10,7 @@ import (
 // TestChatRequestBuilder tests the JSON serialization of the ChatRequest built by the builder.
 func TestChatRequestBuilder(t *testing.T) {
 	// Initialize test data
-	messages := []endpoints.ChatMessage{
+	messages := []endpoints.Message{
 		{Role: "user", Content: "Hello!"},
 	}
 	model := "gpt-4"
@@ -18,7 +18,7 @@ func TestChatRequestBuilder(t *testing.T) {
 	topP := 0.9
 
 	expected := endpoints.ChatRequest{
-		Messages: []endpoints.ChatMessage{
+		Messages: []endpoints.Message{
 			{Role: "user", Content: "Hello!"},
 		},
 		Model:             "gpt-4",
@@ -39,7 +39,7 @@ func TestChatRequestBuilder(t *testing.T) {
 	}
 
 	// Create a ChatRequest using the builder
-	builder := endpoints.NewChatRequestBuilder(messages, model)
+	builder := endpoints.Chat(messages, model)
 	request := builder.SetTemperature(temperature).SetTopP(topP).SetN(0).SetStream(true).SetParallelToolCalls(false).Build()
 
 	// Serialize to JSON

@@ -3,9 +3,8 @@ package endpoints
 // ChatRequest represents the data structure for a chat request.
 // Documentation: https://platform.openai.com/docs/api-reference/chat/create
 type ChatRequest struct {
-	Messages          []ChatMessage    `json:"messages"`
+	Messages          []Message        `json:"messages"`
 	Model             string           `json:"model"`
-	FrequencyPenalty  *float64         `json:"frequency_penalty,omitempty"`   // Optional, -2.0 to 2.0 or nil. Defaults to 0
 	LogitBias         *map[int]float64 `json:"logit_bias,omitempty"`          // Optional, defaults to null
 	Logprobs          *bool            `json:"logprobs,omitempty"`            // Optional, boolean or null. Defaults to false
 	TopLogprobs       *int             `json:"top_logprobs,omitempty"`        // Optional, integer or null. 0 to 20. Requires logprobs to be true
@@ -24,10 +23,11 @@ type ChatRequest struct {
 	ToolChoice        *interface{}     `json:"tool_choice,omitempty"`         // Optional, string or object. Defaults to null
 	ParallelToolCalls *bool            `json:"parallel_tool_calls,omitempty"` // Optional, boolean. Defaults to true
 	User              *string          `json:"user,omitempty"`                // Optional, string. Unique identifier for the end-user
+	FrequencyPenalty  *float64         `json:"frequency_penalty,omitempty"`
 }
 
-// ChatMessage represents a message in the chat
-type ChatMessage struct {
+// Message represents a message in the chat
+type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
@@ -64,10 +64,10 @@ type ChatResponse struct {
 
 // Choice represents a single response choice from the chat API
 type Choice struct {
-	Message      ChatMessage `json:"message"`
-	Index        int         `json:"index"`
-	Logprobs     *Logprobs   `json:"logprobs,omitempty"`
-	FinishReason string      `json:"finish_reason"`
+	Message      Message   `json:"message"`
+	Index        int       `json:"index"`
+	Logprobs     *Logprobs `json:"logprobs,omitempty"`
+	FinishReason string    `json:"finish_reason"`
 }
 
 // Logprobs represents the log probabilities of tokens
@@ -97,10 +97,10 @@ type ChatCompletionChunk struct {
 
 // ChunkChoice represents a single chunk choice in the chat completion chunk
 type ChunkChoice struct {
-	Index        int         `json:"index"`
-	Delta        ChatMessage `json:"delta"`
-	Logprobs     *Logprobs   `json:"logprobs,omitempty"`
-	FinishReason string      `json:"finish_reason"`
+	Index        int       `json:"index"`
+	Delta        Message   `json:"delta"`
+	Logprobs     *Logprobs `json:"logprobs,omitempty"`
+	FinishReason string    `json:"finish_reason"`
 }
 
 // ChatRequestBuilder helps to build a ChatRequest struct
@@ -108,16 +108,26 @@ type ChatRequestBuilder struct {
 	request *ChatRequest
 }
 
-// NewChatRequestBuilder initializes and returns a new ChatRequestBuilder
-func NewChatRequestBuilder(messages []ChatMessage, model string) *ChatRequestBuilder {
-	return &ChatRequestBuilder{
+// Chat initializes and returns a new Chat
+func Chat(messages []Message, model string) *ChatRequestBuilder {
+	builder := &ChatRequestBuilder{
 		request: &ChatRequest{
 			Messages: messages,
 			Model:    model,
 		},
 	}
+
+	if builder.request.Model == "" {
+		builder.SetModel("gpt-4")
+	}
+
+	return builder
 }
 
+func (b *ChatRequestBuilder) SetModel(modelName string) *ChatRequestBuilder {
+	b.request.Model = modelName
+	return b
+}
 func (b *ChatRequestBuilder) SetFrequencyPenalty(value float64) *ChatRequestBuilder {
 	b.request.FrequencyPenalty = &value
 	return b
