@@ -2,7 +2,7 @@ package endpoints
 
 import (
 	"encoding/json"
-	"github.com/Gamut-Technologies/goppy.git/endpoints"
+	"github.com/Gamut-Technologies/goppy/endpoints"
 	"reflect"
 	"testing"
 )

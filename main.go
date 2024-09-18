@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	client2 "github.com/Gamut-Technologies/goppy.git/client"
-	"github.com/Gamut-Technologies/goppy.git/endpoints"
+	client2 "github.com/Gamut-Technologies/goppy/client"
+	"github.com/Gamut-Technologies/goppy/endpoints"
 	"log"
 )
 
