@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/Gamut-Technologies/goppy.git/endpoints"
+	"github.com/Gamut-Technologies/goppy/endpoints"
 	"net/http"
 	"os"
 )
