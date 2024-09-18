@@ -117,18 +117,15 @@ func (c *GoppyClient) Request(requestData interface{}) (*http.Response, error) {
 }
 
 // Response decodes the HTTP response from OpenAI into a given struct
-// Streaming a response will create a slice of result interface{}
 func (c *GoppyClient) Response(resp *http.Response, result interface{}, stream bool) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
-		// Handle API error responses if needed
 		return c.handleAPIError(resp)
 	}
 
 	decoder := json.NewDecoder(resp.Body)
 	if !stream {
-		// Use json.NewDecoder to unmarshal the JSON directly into the struct
 		if err := decoder.Decode(result); err != nil {
 			return fmt.Errorf("failed to decode JSON response: %w", err)
 		}

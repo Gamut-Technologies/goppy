@@ -23,6 +23,7 @@ func main() {
 		SetModel("gpt-4").
 		SetTemperature(0.7).
 		SetTopP(0.9).
+		//SetStream(true).
 		Build()
 
 	req, err := client.Request(requestData)
